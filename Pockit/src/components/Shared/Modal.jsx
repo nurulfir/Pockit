@@ -1,57 +1,60 @@
-import { motion, AnimatePresence } from 'framer-motion';
+import { Dialog, Transition } from '@headlessui/react';
+import { Fragment } from 'react';
 import { X } from 'lucide-react';
-import { Dialog } from '@headlessui/react';
 
 export const Modal = ({ isOpen, onClose, title, children }) => {
   return (
-    <AnimatePresence>
-      {isOpen && (
-        <Dialog
-          as={motion.div}
-          static
-          open={isOpen}
-          onClose={onClose}
-          className="relative z-50"
+    <Transition.Root show={isOpen} as={Fragment}>
+      <Dialog as="div" className="relative z-50" onClose={onClose}>
+        {/* Backdrop */}
+        <Transition.Child
+          as={Fragment}
+          enter="ease-out duration-300"
+          enterFrom="opacity-0"
+          enterTo="opacity-100"
+          leave="ease-in duration-200"
+          leaveFrom="opacity-100"
+          leaveTo="opacity-0"
         >
-          {/* Backdrop */}
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="fixed inset-0 bg-black/50 backdrop-blur-sm"
-          />
+          <div className="fixed inset-0 bg-black/40 backdrop-blur-sm" />
+        </Transition.Child>
 
-          {/* Modal */}
-          <div className="fixed inset-0 flex items-center justify-center p-4">
-            <Dialog.Panel
-              as={motion.div}
-              initial={{ opacity: 0, scale: 0.9, y: 20 }}
-              animate={{ opacity: 1, scale: 1, y: 0 }}
-              exit={{ opacity: 0, scale: 0.9, y: 20 }}
-              className="w-full max-w-md bg-white dark:bg-gray-800 rounded-2xl shadow-2xl 
-                       border border-gray-200 dark:border-gray-700 overflow-hidden"
-            >
-              {/* Header */}
-              <div className="flex items-center justify-between p-6 border-b border-gray-200 dark:border-gray-700">
-                <Dialog.Title className="text-xl font-bold text-gray-800 dark:text-gray-200">
-                  {title}
-                </Dialog.Title>
+        {/* Modal panel */}
+        <div className="fixed inset-0 flex items-center justify-center p-6">
+          <Transition.Child
+            as={Fragment}
+            enter="ease-out duration-300"
+            enterFrom="opacity-0 scale-95"
+            enterTo="opacity-100 scale-100"
+            leave="ease-in duration-200"
+            leaveFrom="opacity-100 scale-100"
+            leaveTo="opacity-0 scale-95"
+          >
+            <Dialog.Panel className="w-full max-w-xl rounded-3xl bg-white/60 dark:bg-gray-900/60 backdrop-blur-md border border-white/30 dark:border-gray-700 shadow-2xl overflow-hidden">
+              {/* Close button */}
+              <div className="absolute top-4 right-4">
                 <button
                   onClick={onClose}
-                  className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition"
+                  aria-label="Tutup"
+                  className="w-10 h-10 rounded-full bg-white/60 dark:bg-gray-800/60 flex items-center justify-center shadow hover:scale-105 transition"
                 >
-                  <X className="w-6 h-6" />
+                  <X className="w-5 h-5 text-gray-700 dark:text-gray-200" />
                 </button>
               </div>
 
-              {/* Content */}
-              <div className="p-6">
-                {children}
+              {/* Header */}
+              <div className="px-8 pt-8 pb-4 border-b border-white/20 dark:border-gray-700">
+                <Dialog.Title className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-white">
+                  {title}
+                </Dialog.Title>
               </div>
+
+              {/* Content */}
+              <div className="px-8 py-6">{children}</div>
             </Dialog.Panel>
-          </div>
-        </Dialog>
-      )}
-    </AnimatePresence>
+          </Transition.Child>
+        </div>
+      </Dialog>
+    </Transition.Root>
   );
 };
