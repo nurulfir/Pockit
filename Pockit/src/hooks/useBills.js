@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { billService } from '../services/billService';
+import { storageService } from '../services/storageService';
 
 export const useBills = () => {
   const [bills, setBills] = useState([]);
@@ -10,19 +10,19 @@ export const useBills = () => {
   }, []);
 
   const loadBills = async () => {
-    const data = await billService.getBills();
+    const data = await storageService.getBills();
     setBills(data);
     setLoading(false);
   };
 
   const addBill = async (bill) => {
-    const newBill = await billService.addBill(bill);
+    const newBill = await storageService.addBill(bill);
     setBills([...bills, newBill]);
     return newBill;
   };
 
   const markPaid = async (id) => {
-    const updated = await billService.markBillPaid(id);
+    const updated = await storageService.markBillPaid(id);
     if (updated) {
       setBills(bills.map(b => b.id === id ? updated : b));
     }
@@ -30,12 +30,12 @@ export const useBills = () => {
   };
 
   const deleteBill = async (id) => {
-    await billService.deleteBill(id);
+    await storageService.deleteBill(id);
     setBills(bills.filter(b => b.id !== id));
   };
 
   const getUpcomingBills = (daysAhead = 7) => {
-    return billService.getUpcomingBills(bills, daysAhead);
+    return storageService.getUpcomingBills(bills, daysAhead);
   };
 
   const getPendingBills = () => {

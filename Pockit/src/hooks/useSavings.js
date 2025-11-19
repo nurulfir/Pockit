@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { savingsService } from '../services/savingsService';
+import { storageService } from '../services/storageService';
 
 export const useSavings = () => {
   const [goals, setGoals] = useState([]);
@@ -10,19 +10,19 @@ export const useSavings = () => {
   }, []);
 
   const loadGoals = async () => {
-    const data = await savingsService.getGoals();
+    const data = await storageService.getGoals();
     setGoals(data);
     setLoading(false);
   };
 
   const addGoal = async (goal) => {
-    const newGoal = await savingsService.addGoal(goal);
+    const newGoal = await storageService.addGoal(goal);
     setGoals([...goals, newGoal]);
     return newGoal;
   };
 
   const addToGoal = async (id, amount) => {
-    const updated = await savingsService.updateGoalProgress(id, amount);
+    const updated = await storageService.updateGoalProgress(id, amount);
     if (updated) {
       setGoals(goals.map(g => g.id === id ? updated : g));
     }
@@ -30,7 +30,7 @@ export const useSavings = () => {
   };
 
   const deleteGoal = async (id) => {
-    await savingsService.deleteGoal(id);
+    await storageService.deleteGoal(id);
     setGoals(goals.filter(g => g.id !== id));
   };
 

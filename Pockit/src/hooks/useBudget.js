@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { budgetService } from '../services/budgetService';
+import { storageService } from '../services/storageService';
 
 export const useBudget = () => {
   const [budgets, setBudgets] = useState([]);
@@ -10,19 +10,19 @@ export const useBudget = () => {
   }, []);
 
   const loadBudgets = async () => {
-    const data = await budgetService.getBudgets();
+    const data = await storageService.getBudgets();
     setBudgets(data);
     setLoading(false);
   };
 
   const addBudget = async (budget) => {
-    const newBudget = await budgetService.addBudget(budget);
+    const newBudget = await storageService.addBudget(budget);
     setBudgets([...budgets, newBudget]);
     return newBudget;
   };
 
   const updateBudget = async (id, updates) => {
-    const updated = await budgetService.updateBudget(id, updates);
+    const updated = await storageService.updateBudget(id, updates);
     if (updated) {
       setBudgets(budgets.map(b => b.id === id ? updated : b));
     }
@@ -30,7 +30,7 @@ export const useBudget = () => {
   };
 
   const deleteBudget = async (id) => {
-    await budgetService.deleteBudget(id);
+    await storageService.deleteBudget(id);
     setBudgets(budgets.filter(b => b.id !== id));
   };
 
