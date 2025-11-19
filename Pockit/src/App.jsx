@@ -5,7 +5,8 @@ import { Header } from "./components/Layout/Header";
 import { SummaryCards } from "./components/Dashboard/SummaryCards";
 import { FinancialHealthDetailed } from "./components/Dashboard/FinancialHealthDetailed";
 import { InsightsDashboard } from "./components/Insights/InsightsDashboard";
-import { TransactionForm } from "./components/Transaction/TransactionForm";
+import { Income } from "./components/Transaction/Income";
+import { Expenditure } from "./components/Transaction/Expenditure";
 import { TransactionList } from "./components/Transaction/TransactionList";
 import { BudgetPlanner } from "./components/Budget/BudgetPlanner";
 import { SavingsGoals } from "./components/Savings/SavingsGoals";
@@ -34,7 +35,8 @@ import { fadeIn } from "./utils/animations";
 function App() {
 	const [selectedMonth, setSelectedMonth] = useState(new Date().getMonth());
 	const [activeTab, setActiveTab] = useState("dashboard");
-	const [openModal, setOpenModal] = useState(false);
+	const [openIncomeModal, setOpenIncomeModal] = useState(false);
+	const [openExpenditureModal, setOpenExpenditureModal] = useState(false);
 
 	const {
 		transactions,
@@ -126,7 +128,7 @@ function App() {
 	else if (budgetAdherence < 50)
 		insights.push({
 			type: "warning",
-			message: "You’re exceeding many budgets.",
+			message: "You're exceeding many budgets.",
 		});
 
 	if (hasEmergencyFund)
@@ -164,7 +166,6 @@ function App() {
 					setActiveTab={setActiveTab}
 					selectedMonth={selectedMonth}
 					setSelectedMonth={setSelectedMonth}
-					onAddTransaction={() => setOpenModal(true)}
 				/>
 
 				{/* ========================= DASHBOARD ========================= */}
@@ -176,6 +177,8 @@ function App() {
 								totalIncome={totalIncome}
 								totalExpense={totalExpense}
 								balance={balance}
+								onAddIncome={() => setOpenIncomeModal(true)}
+								onAddExpenditure={() => setOpenExpenditureModal(true)}
 							/>
 						</div>
 
@@ -244,15 +247,31 @@ function App() {
 				)}
 			</div>
 
+			{/* Modal Income */}
 			<Modal
-				isOpen={openModal}
-				onClose={() => setOpenModal(false)}
-				title="Tambah Transaksi"
+				isOpen={openIncomeModal}
+				onClose={() => setOpenIncomeModal(false)}
+				title="Tambah Pemasukan"
 			>
-				<TransactionForm
-					onAddTransaction={(data) => {
+				<Income
+					onAddIncome={(data) => {
 						addTransaction(data);
-						setOpenModal(false);
+						setOpenIncomeModal(false);
+					}}
+					hideHeader
+				/>
+			</Modal>
+
+			{/* Modal Expenditure */}
+			<Modal
+				isOpen={openExpenditureModal}
+				onClose={() => setOpenExpenditureModal(false)}
+				title="Tambah Pengeluaran"
+			>
+				<Expenditure
+					onAddExpenditure={(data) => {
+						addTransaction(data);
+						setOpenExpenditureModal(false);
 					}}
 					hideHeader
 				/>

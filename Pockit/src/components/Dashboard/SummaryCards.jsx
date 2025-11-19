@@ -1,23 +1,27 @@
 import { motion } from 'framer-motion';
-import { TrendingUp, TrendingDown, Wallet } from 'lucide-react';
+import { TrendingUp, TrendingDown, Wallet, Plus } from 'lucide-react';
 import { formatCurrency } from '../../utils/formatters';
 import { staggerContainer, scaleIn } from '../../utils/animations';
 
-export const SummaryCards = ({ totalIncome, totalExpense, balance }) => {
+export const SummaryCards = ({ totalIncome, totalExpense, balance, onAddIncome, onAddExpenditure }) => {
   const cards = [
     {
       id: 'income',
       title: 'Total Pemasukan',
       amount: totalIncome,
       Icon: TrendingUp,
-      accent: 'green'
+      accent: 'green',
+      showButton: true,
+      onClick: onAddIncome  // Button untuk income
     },
     {
       id: 'expense',
       title: 'Total Pengeluaran',
       amount: totalExpense,
       Icon: TrendingDown,
-      accent: 'red'
+      accent: 'red',
+      showButton: true,
+      onClick: onAddExpenditure  // Button untuk expenditure
     },
     {
       id: 'balance',
@@ -83,7 +87,7 @@ export const SummaryCards = ({ totalIncome, totalExpense, balance }) => {
             {/* Glow */}
             <div className={`absolute -inset-px rounded-3xl pointer-events-none opacity-0 hover:opacity-100 transition-opacity duration-300 ${cls.ring}`} />
 
-            <div className="flex items-start justify-between">
+            <div className="flex items-start justify-between mb-3">
               <div className="min-w-0">
                 <p className="text-sm text-gray-700 dark:text-gray-300">{c.title}</p>
 
@@ -103,11 +107,34 @@ export const SummaryCards = ({ totalIncome, totalExpense, balance }) => {
               </div>
             </div>
 
-            <p className="text-xs text-gray-500 dark:text-gray-400 mt-3">
-              {c.id === 'balance'
-                ? balance >= 0 ? 'Keuangan sehat bulan ini' : 'Perhatikan pengeluaran Anda'
-                : `Ringkasan ${c.title.toLowerCase()}`}
-            </p>
+            {/* Bottom section dengan description atau button */}
+            <div className="flex items-center justify-between mt-3">
+              <p className="text-xs text-gray-500 dark:text-gray-400">
+                {c.id === 'balance'
+                  ? balance >= 0 ? 'Keuangan sehat bulan ini' : 'Perhatikan pengeluaran Anda'
+                  : `Ringkasan ${c.title.toLowerCase()}`}
+              </p>
+
+              {/* Button di card Pemasukan dan Pengeluaran */}
+              {c.showButton && (
+                <motion.button
+                  onClick={c.onClick}
+                  whileHover={{ scale: 1.1 }}
+                  whileTap={{ scale: 0.9 }}
+                  className={`
+                    p-2 
+                    rounded-lg 
+                    ${c.id === 'income' ? 'bg-green-600 hover:bg-green-700 hover:shadow-green-500/50' : 'bg-red-600 hover:bg-red-700 hover:shadow-red-500/50'}
+                    text-white 
+                    shadow-lg 
+                    transition-all
+                  `}
+                  title={`Tambah ${c.id === 'income' ? 'Pemasukan' : 'Pengeluaran'}`}
+                >
+                  <Plus className="w-5 h-5" />
+                </motion.button>
+              )}
+            </div>
           </motion.div>
         );
       })}
