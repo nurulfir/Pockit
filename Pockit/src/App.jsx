@@ -145,11 +145,11 @@ function App() {
 	const upcomingBills = getUpcomingBills(7);
 
 	const tabs = [
-		{ id: "dashboard", label: "Dashboard", icon: "📊" },
-		{ id: "insights", label: "AI Insights", icon: "🤖" },
-		{ id: "budget", label: "Budget", icon: "💰" },
-		{ id: "savings", label: "Savings", icon: "🎯" },
-		{ id: "bills", label: "Bills", icon: "🔔" },
+		{ id: "dashboard", label: "Dashboard"},
+		{ id: "insights", label: "AI Insights"},
+		{ id: "budget", label: "Budget"},
+		{ id: "savings", label: "Savings"},
+		{ id: "bills", label: "Bills"},
 	];
 
 	return (
